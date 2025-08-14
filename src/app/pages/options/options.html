@@ -1,0 +1,29 @@
+<div class="options-container">
+  <div class="options-content">
+    <div class="header">
+      <img src="/assets/images/logo.png" alt="Logo" class="logo">
+      <h1>Bem-vindo à J & B Lanchonete!</h1>
+      <p>O que você gostaria de fazer hoje?</p>
+    </div>
+
+    <div class="options-grid">
+      <div class="option-card" (click)="fazerReserva()">
+        <div class="option-icon">🍔</div>
+        <h3>Fazer Reserva</h3>
+        <p>Reserve seu lanche favorito e retire no horário que preferir</p>
+        <div class="action-arrow">→</div>
+      </div>
+
+      <div class="option-card" (click)="verReservas()">
+        <div class="option-icon">📋</div>
+        <h3>Minhas Reservas</h3>
+        <p>Consulte e gerencie suas reservas já realizadas</p>
+        <div class="action-arrow">→</div>
+      </div>
+    </div>
+
+    <div class="footer">
+      <p>Horário de funcionamento: 08:00 às 22:00</p>
+    </div>
+  </div>
+</div>

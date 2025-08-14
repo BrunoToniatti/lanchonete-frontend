@@ -1,0 +1,19 @@
+<div class="retirada-container">
+		<form class="retirada-form" (ngSubmit)="onSubmit()" #form="ngForm">
+		<h2>Escolha o horário para retirada do seu lanche</h2>
+		<div class="form-group">
+			<label for="horario">Horário de retirada</label>
+			<input
+				id="horario"
+				name="horario"
+				type="time"
+				required
+				[(ngModel)]="horario"
+				min="08:00"
+				max="22:00"
+			/>
+		</div>
+		<button type="submit" [disabled]="!form.form.valid">Confirmar horário</button>
+			<button type="button" class="voltar-menu" (click)="voltarMenu()">Voltar ao menu</button>
+	</form>
+</div>

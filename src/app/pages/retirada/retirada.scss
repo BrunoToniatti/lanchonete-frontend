@@ -1,0 +1,108 @@
+button.voltar-menu {
+	background: transparent;
+	color: #ff6b35;
+	border: 2px solid #ff6b35;
+	border-radius: 0.7rem;
+	padding: 0.7rem 1.2rem;
+	font-size: 1rem;
+	font-family: 'Inter', sans-serif;
+	font-weight: 600;
+	cursor: pointer;
+	margin-top: 0.7rem;
+	transition: background 0.2s, color 0.2s, border 0.2s;
+}
+button.voltar-menu:hover {
+	background: #ff6b35;
+	color: #fff;
+	border: 2px solid #ff6b35;
+}
+.retirada-container {
+	min-height: 100vh;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	background: linear-gradient(135deg, #ff6b35 0%, #ffcc02 100%);
+	font-family: 'Inter', sans-serif;
+}
+
+.retirada-form {
+	background: #fff;
+	padding: 2.5rem 2rem 2rem 2rem;
+	border-radius: 1.2rem;
+	box-shadow: 0 4px 32px #ff6b3533;
+	display: flex;
+	flex-direction: column;
+	min-width: 320px;
+	max-width: 90vw;
+	gap: 1.2rem;
+	align-items: center;
+}
+
+.retirada-form h2 {
+	color: #ff6b35;
+	margin-bottom: 0.5rem;
+	font-size: 1.3rem;
+	font-family: 'Poppins', sans-serif;
+	font-weight: 600;
+	text-align: center;
+}
+
+.form-group {
+	display: flex;
+	flex-direction: column;
+	gap: 0.3rem;
+	width: 100%;
+}
+
+.form-group label {
+	color: #f7931e;
+	font-weight: 600;
+	font-size: 1rem;
+}
+
+.form-group input[type="time"] {
+	padding: 0.7rem 1rem;
+	border: 1.5px solid #ffcc02;
+	border-radius: 0.7rem;
+	font-size: 1.1rem;
+	font-family: 'Inter', sans-serif;
+	outline: none;
+	transition: border 0.2s;
+}
+.form-group input[type="time"]:focus {
+	border: 1.5px solid #ff6b35;
+}
+
+button[type="submit"] {
+	background: linear-gradient(90deg, #ff6b35 0%, #ffcc02 100%);
+	color: #fff;
+	border: none;
+	border-radius: 0.7rem;
+	padding: 0.8rem 1.5rem;
+	font-size: 1.1rem;
+	font-family: 'Inter', sans-serif;
+	font-weight: 600;
+	cursor: pointer;
+	margin-top: 0.5rem;
+	transition: background 0.2s, transform 0.2s;
+	box-shadow: 0 2px 8px #ffcc0233;
+}
+button[disabled] {
+	background: #ccc;
+	color: #888;
+	cursor: not-allowed;
+}
+button[type="submit"]:hover:not([disabled]) {
+	background: linear-gradient(90deg, #f7931e 0%, #ffcc02 100%);
+	transform: translateY(-2px) scale(1.03);
+}
+
+@media (max-width: 600px) {
+	.retirada-form {
+		min-width: 90vw;
+		padding: 1.2rem 0.5rem 1.5rem 0.5rem;
+	}
+	.retirada-form h2 {
+		font-size: 1rem;
+	}
+}

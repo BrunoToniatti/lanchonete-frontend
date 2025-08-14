@@ -1,0 +1,147 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Poppins:wght@400;500;600;700;800&display=swap');
+
+.initial-page-container {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #ff6b35 0%, #f7931e 50%, #ffcc02 100%);
+  animation: fadeInBg 1s;
+  font-family: 'Inter', sans-serif;
+  position: relative;
+  overflow: hidden;
+}
+
+.initial-page-container::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: radial-gradient(circle at 30% 20%, rgba(255, 255, 255, 0.1) 0%, transparent 50%);
+  animation: float 6s ease-in-out infinite;
+}.user-form {
+	background: rgba(255, 255, 255, 0.95);
+	backdrop-filter: blur(20px);
+	padding: 2.5rem 2rem 2rem 2rem;
+	border-radius: 1.5rem;
+	box-shadow:
+		0 8px 32px rgba(255, 107, 53, 0.2),
+		0 0 0 1px rgba(255, 255, 255, 0.2);
+	display: flex;
+	flex-direction: column;
+	min-width: 320px;
+	max-width: 90vw;
+	gap: 1.2rem;
+	animation: fadeIn 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+	position: relative;
+	z-index: 2;
+}
+
+.logo-header {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	gap: 1rem;
+	margin-bottom: 0.5rem;
+}
+
+.form-logo {
+	width: 80px;
+	height: 80px;
+	border-radius: 50%;
+	object-fit: cover;
+	border: 3px solid rgba(255, 107, 53, 0.3);
+	box-shadow: 0 4px 16px rgba(255, 107, 53, 0.2);
+	animation: logoFloat 3s ease-in-out infinite;
+}
+
+.user-form h2 {
+  color: #ff6b35;
+  margin-bottom: 0.5rem;
+  font-size: 1.5rem;
+  font-family: 'Poppins', sans-serif;
+  font-weight: 600;
+  text-align: center;
+}.form-group {
+	display: flex;
+	flex-direction: column;
+	gap: 0.3rem;
+}
+
+.form-group label {
+  color: #f7931e;
+  font-weight: 600;
+  font-size: 1rem;
+  font-family: 'Inter', sans-serif;
+}.form-group input {
+	padding: 0.7rem 1rem;
+	border: 1.5px solid #ffcc02;
+	border-radius: 0.7rem;
+	font-size: 1.1rem;
+	font-family: 'Inter', sans-serif;
+	outline: none;
+	transition: all 0.3s ease;
+	background: rgba(255, 255, 255, 0.8);
+}
+.form-group input:focus {
+	border: 1.5px solid #ff6b35;
+	background: rgba(255, 255, 255, 1);
+	box-shadow: 0 0 0 3px rgba(255, 107, 53, 0.1);
+	transform: translateY(-2px);
+}
+
+button[type="submit"] {
+	background: linear-gradient(90deg, #ff6b35 0%, #f7931e 100%);
+	color: #fff;
+	border: none;
+	border-radius: 0.7rem;
+	padding: 0.8rem;
+	font-size: 1.1rem;
+	font-family: 'Inter', sans-serif;
+	font-weight: 600;
+	cursor: pointer;
+	margin-top: 0.5rem;
+	transition: all 0.3s ease;
+	box-shadow: 0 4px 16px rgba(255, 107, 53, 0.3);
+}
+button[disabled] {
+	background: linear-gradient(90deg, #ccc 0%, #999 100%);
+	color: #666;
+	cursor: not-allowed;
+	box-shadow: none;
+}
+button[type="submit"]:hover:not([disabled]) {
+	background: linear-gradient(90deg, #f7931e 0%, #ffcc02 100%);
+	transform: translateY(-3px) scale(1.02);
+	box-shadow: 0 8px 24px rgba(255, 107, 53, 0.4);
+}
+
+@media (max-width: 600px) {
+	.user-form {
+		min-width: 90vw;
+		padding: 1.2rem 0.5rem 1.5rem 0.5rem;
+	}
+	.user-form h2 {
+		font-size: 1.1rem;
+	}
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(30px) scale(0.95); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+@keyframes fadeInBg {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+@keyframes logoFloat {
+  0%, 100% { transform: translateY(0px) rotate(0deg); }
+  50% { transform: translateY(-5px) rotate(2deg); }
+}
+@keyframes float {
+  0%, 100% { transform: translateX(0px) translateY(0px); }
+  33% { transform: translateX(30px) translateY(-30px); }
+  66% { transform: translateX(-20px) translateY(20px); }
+}

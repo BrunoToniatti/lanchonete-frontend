@@ -1,0 +1,23 @@
+<div class="menu-container" [@fadeIn]>
+	<div class="menu-header">
+		<button class="voltar-btn" (click)="voltarOptions()">← Voltar</button>
+		<h2 class="menu-title">Menu do Dia</h2>
+	</div>
+	<div class="menu-list" [@listAnim]>
+		<div *ngFor="let lanche of lanchesOrdenados" class="lanche-card" [class.mais-vendido]="lanche.maisVendido" [class.esgotado]="lanche.status === 'esgotado'">
+			<div class="lanche-foto-wrapper">
+				<img *ngIf="lanche.foto" [src]="lanche.foto" [alt]="lanche.nome" class="lanche-foto" />
+				<div *ngIf="!lanche.foto" class="lanche-foto-placeholder">🍔</div>
+				<span *ngIf="lanche.maisVendido" class="badge badge-vendido">Mais vendido</span>
+				<span *ngIf="lanche.status === 'esgotado'" class="badge badge-esgotado">Esgotado</span>
+			</div>
+			<div class="lanche-info">
+				<div class="lanche-nome">{{ lanche.nome }}</div>
+				<div class="lanche-preco">R$ {{ lanche.preco | number:'1.2-2' }}</div>
+				<button class="btn-reserva" [disabled]="lanche.status === 'esgotado'" (click)="adicionarReserva(lanche)">
+					Adicionar à reserva
+				</button>
+			</div>
+		</div>
+	</div>
+</div>

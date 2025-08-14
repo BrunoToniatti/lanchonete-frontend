@@ -1,0 +1,58 @@
+<div class="finish-container">
+  <div class="finish-form">
+    <h2>Resumo da sua reserva</h2>
+
+    <div class="resumo-section">
+      <div class="resumo-item">
+        <label>Nome:</label>
+        <span>{{ dadosReserva.nome }}</span>
+      </div>
+
+      <div class="resumo-item">
+        <label>Telefone:</label>
+        <span>{{ dadosReserva.telefone }}</span>
+      </div>
+
+      <div class="resumo-item">
+        <label>Itens:</label>
+        <div class="itens-lista">
+          <div *ngFor="let item of dadosReserva.itens" class="item">
+            {{ item.nome }} - R$ {{ item.preco.toFixed(2) }}
+          </div>
+        </div>
+      </div>
+
+      <div class="resumo-item">
+        <label>Horário de retirada:</label>
+        <span>{{ dadosReserva.horario }}</span>
+      </div>
+
+      <div class="total">
+        <strong>Total: R$ {{ calcularTotal().toFixed(2) }}</strong>
+      </div>
+    </div>
+
+    <button type="button" class="confirmar-btn" (click)="confirmarReserva()">
+      Confirmar Reserva
+    </button>
+  </div>
+</div>
+
+<!-- Modal de confirmação -->
+<div class="modal-overlay" *ngIf="mostrarModal" (click)="fecharModal()">
+  <div class="modal-content" (click)="$event.stopPropagation()">
+    <div class="modal-header">
+      <h3>✅ Reserva Confirmada!</h3>
+    </div>
+    <div class="modal-body">
+      <p>Sua reserva está garantida!</p>
+      <p>Nos vemos às <strong>{{ dadosReserva.horario }}</strong>.</p>
+      <p>Não se atrase para evitar cancelamento.</p>
+    </div>
+    <div class="modal-footer">
+      <button type="button" class="modal-btn" (click)="voltarInicio()">
+        Fazer nova reserva
+      </button>
+    </div>
+  </div>
+</div>

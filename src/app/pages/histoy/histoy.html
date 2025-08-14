@@ -1,0 +1,86 @@
+<div class="history-container">
+  <div class="history-content">
+    <div class="header">
+      <h1>Histórico de Pedidos</h1>
+      <button class="voltar-btn" (click)="voltarOptions()">← Voltar</button>
+    </div>
+
+    <!-- Pedido em andamento -->
+    <div class="current-order" *ngIf="pedidoAtual">
+      <h3>📍 Pedido em Andamento</h3>
+      <div class="order-card current">
+        <div class="order-header">
+          <span class="order-id">Pedido #{{ pedidoAtual.id }}</span>
+          <span class="status-badge andamento">Em preparo</span>
+        </div>
+        <div class="order-details">
+          <p><strong>Horário de retirada:</strong> {{ pedidoAtual.horarioRetirada }}</p>
+          <div class="items">
+            <div *ngFor="let item of pedidoAtual.itens" class="item">
+              {{ item.nome }} - R$ {{ item.preco.toFixed(2) }}
+            </div>
+          </div>
+          <p class="total"><strong>Total: R$ {{ calcularTotal(pedidoAtual.itens).toFixed(2) }}</strong></p>
+        </div>
+        <div class="order-actions">
+          <button class="cancel-btn" (click)="cancelarPedido(pedidoAtual.id)">
+            Cancelar Pedido
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Histórico de pedidos anteriores -->
+    <div class="history-section">
+      <h3>📋 Pedidos Anteriores</h3>
+      <div class="orders-list" *ngIf="historicoPedidos.length > 0; else noPedidos">
+        <div *ngFor="let pedido of historicoPedidos" class="order-card">
+          <div class="order-header">
+            <span class="order-id">Pedido #{{ pedido.id }}</span>
+            <span class="status-badge" [ngClass]="pedido.status">{{ getStatusText(pedido.status) }}</span>
+          </div>
+          <div class="order-details">
+            <p><strong>Data:</strong> {{ pedido.data }}</p>
+            <p><strong>Horário de retirada:</strong> {{ pedido.horarioRetirada }}</p>
+            <div class="items">
+              <div *ngFor="let item of pedido.itens" class="item">
+                {{ item.nome }} - R$ {{ item.preco.toFixed(2) }}
+              </div>
+            </div>
+            <p class="total"><strong>Total: R$ {{ calcularTotal(pedido.itens).toFixed(2) }}</strong></p>
+          </div>
+        </div>
+      </div>
+
+      <ng-template #noPedidos>
+        <div class="no-orders">
+          <p>Você ainda não fez nenhum pedido.</p>
+          <button class="fazer-pedido-btn" (click)="fazerNovoPedido()">
+            Fazer primeiro pedido
+          </button>
+        </div>
+      </ng-template>
+    </div>
+  </div>
+</div>
+
+<!-- Modal de confirmação de cancelamento -->
+<div class="modal-overlay" *ngIf="mostrarModalCancelamento" (click)="fecharModal()">
+  <div class="modal-content" (click)="$event.stopPropagation()">
+    <div class="modal-header">
+      <h3>⚠️ Cancelar Pedido</h3>
+    </div>
+    <div class="modal-body">
+      <p>Tem certeza que deseja cancelar este pedido?</p>
+      <p><strong>Esta ação não pode ser desfeita.</strong></p>
+    </div>
+    <div class="modal-footer">
+      <button type="button" class="modal-btn secondary" (click)="fecharModal()">
+        Não, manter pedido
+      </button>
+      <button type="button" class="modal-btn primary" (click)="confirmarCancelamento()">
+        Sim, cancelar
+      </button>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,35 @@
+<div class="initial-page-container">
+	<form class="user-form" (ngSubmit)="onSubmit()" #form="ngForm" [@fadeIn]>
+		<div class="logo-header">
+			<img src="assets/images/logo.png" alt="J & B Lanchonete" class="form-logo">
+			<h2>Bem-vindo à J & B Lanchonete</h2>
+		</div>
+		<div class="form-group">
+			<label for="telefone">Telefone</label>
+			<input
+				id="telefone"
+				name="telefone"
+				type="tel"
+				maxlength="15"
+				required
+				[(ngModel)]="telefone"
+				(input)="onTelefoneInput($event)"
+				placeholder="(11) 99999-9999"
+				autocomplete="tel"
+			/>
+		</div>
+		<div class="form-group">
+			<label for="nome">Nome completo</label>
+			<input
+				id="nome"
+				name="nome"
+				type="text"
+				required
+				[(ngModel)]="nome"
+				placeholder="Seu nome completo"
+				autocomplete="off"
+			/>
+		</div>
+		<button type="submit" [disabled]="!form.form.valid">Entrar</button>
+	</form>
+</div>
