@@ -75,6 +75,7 @@ export class Menu {
   chatAberto = false;
   mensagens: ChatMessage[] = [];
   novaMensagem = '';
+  enviando = false;
 
   constructor(
     private router: Router
@@ -168,8 +169,8 @@ export class Menu {
     }
   }
 
-  enviarMensagem() {
-    if (this.novaMensagem.trim()) {
+  async enviarMensagem() {
+    if (this.novaMensagem.trim() && !this.enviando) {
       // Adiciona mensagem do usuário
       this.mensagens.push({
         text: this.novaMensagem,
@@ -179,15 +180,51 @@ export class Menu {
 
       const mensagemUsuario = this.novaMensagem;
       this.novaMensagem = '';
+      this.enviando = true;
 
-      // Simula resposta do bot (substituir pela integração OpenAI)
-      setTimeout(() => {
+      // Mensagem de "digitando..."
+      this.mensagens.push({
+        text: 'Digitando... ✍️',
+        sender: 'bot',
+        timestamp: new Date()
+      });
+
+      try {
+        // Chama a Netlify Function
+        const response = await fetch('/.netlify/functions/chat', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ message: mensagemUsuario })
+        });
+
+        if (!response.ok) {
+          throw new Error('Erro na requisição');
+        }
+
+        const data = await response.json();
+
+        // Remove "Digitando..." e adiciona resposta real
+        this.mensagens.pop();
         this.mensagens.push({
-          text: 'Recebi sua mensagem! Em breve integrarei com o ChatGPT. 🤖',
+          text: data.response,
           sender: 'bot',
           timestamp: new Date()
         });
-      }, 800);
+
+      } catch (error) {
+        // Remove "Digitando..." e mostra erro
+        this.mensagens.pop();
+        this.mensagens.push({
+          text: 'Desculpe, ocorreu um erro ao processar sua mensagem. Tente novamente! 😔',
+          sender: 'bot',
+          timestamp: new Date()
+        });
+        console.error('Erro ao enviar mensagem:', error);
+      } finally {
+        this.enviando = false;
+      }
 
       // Auto-scroll para última mensagem
       setTimeout(() => {
