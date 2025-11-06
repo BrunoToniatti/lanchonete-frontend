@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { trigger, transition, style, animate, query, stagger } from '@angular/animations';
+import { FormsModule } from '@angular/forms';
+import { trigger, transition, style, animate, query, stagger, state } from '@angular/animations';
 import { Router } from '@angular/router';
 
 interface Lanche {
@@ -11,10 +12,16 @@ interface Lanche {
   maisVendido?: boolean;
 }
 
+interface ChatMessage {
+  text: string;
+  sender: 'user' | 'bot';
+  timestamp: Date;
+}
+
 @Component({
   selector: 'app-menu',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, FormsModule],
   templateUrl: './menu.html',
   styleUrls: ['./menu.scss'],
   animations: [
@@ -33,10 +40,41 @@ interface Lanche {
         style({ opacity: 0 }),
         animate('0.7s 0.2s cubic-bezier(.4,0,.2,1)', style({ opacity: 1 }))
       ])
+    ]),
+    trigger('chatSlide', [
+      state('closed', style({
+        transform: 'translateY(100%)',
+        opacity: 0
+      })),
+      state('open', style({
+        transform: 'translateY(0)',
+        opacity: 1
+      })),
+      transition('closed => open', [
+        animate('0.4s cubic-bezier(0.4, 0, 0.2, 1)')
+      ]),
+      transition('open => closed', [
+        animate('0.3s cubic-bezier(0.4, 0, 0.2, 1)')
+      ])
+    ]),
+    trigger('messageAnim', [
+      transition(':enter', [
+        style({ opacity: 0, transform: 'translateY(10px) scale(0.95)' }),
+        animate('0.3s cubic-bezier(0.4, 0, 0.2, 1)', style({ opacity: 1, transform: 'translateY(0) scale(1)' }))
+      ])
+    ]),
+    trigger('buttonPulse', [
+      transition(':enter', [
+        style({ transform: 'scale(0)' }),
+        animate('0.4s cubic-bezier(0.34, 1.56, 0.64, 1)', style({ transform: 'scale(1)' }))
+      ])
     ])
   ]
 })
 export class Menu {
+  chatAberto = false;
+  mensagens: ChatMessage[] = [];
+  novaMensagem = '';
 
   constructor(
     private router: Router
@@ -116,5 +154,52 @@ export class Menu {
 
   voltarOptions() {
     this.router.navigate(['/opcoes']);
+  }
+
+  toggleChat() {
+    this.chatAberto = !this.chatAberto;
+    if (this.chatAberto && this.mensagens.length === 0) {
+      // Mensagem de boas-vindas
+      this.mensagens.push({
+        text: 'Olá! 👋 Como posso ajudar você hoje?',
+        sender: 'bot',
+        timestamp: new Date()
+      });
+    }
+  }
+
+  enviarMensagem() {
+    if (this.novaMensagem.trim()) {
+      // Adiciona mensagem do usuário
+      this.mensagens.push({
+        text: this.novaMensagem,
+        sender: 'user',
+        timestamp: new Date()
+      });
+
+      const mensagemUsuario = this.novaMensagem;
+      this.novaMensagem = '';
+
+      // Simula resposta do bot (substituir pela integração OpenAI)
+      setTimeout(() => {
+        this.mensagens.push({
+          text: 'Recebi sua mensagem! Em breve integrarei com o ChatGPT. 🤖',
+          sender: 'bot',
+          timestamp: new Date()
+        });
+      }, 800);
+
+      // Auto-scroll para última mensagem
+      setTimeout(() => {
+        const chatMessages = document.querySelector('.chat-messages');
+        if (chatMessages) {
+          chatMessages.scrollTop = chatMessages.scrollHeight;
+        }
+      }, 100);
+    }
+  }
+
+  fecharChat() {
+    this.chatAberto = false;
   }
 }

@@ -20,4 +20,50 @@
 			</div>
 		</div>
 	</div>
+
+	<!-- Botão Flutuante do Chat -->
+	<button class="chat-toggle-btn" (click)="toggleChat()" [@buttonPulse] [class.active]="chatAberto">
+		<span *ngIf="!chatAberto">💬</span>
+		<span *ngIf="chatAberto">✕</span>
+	</button>
+
+	<!-- Caixa de Chat -->
+	<div class="chat-container" [@chatSlide]="chatAberto ? 'open' : 'closed'">
+		<div class="chat-header">
+			<div class="chat-header-content">
+				<span class="chat-icon">🤖</span>
+				<div>
+					<h3 class="chat-title">Assistente Virtual</h3>
+					<p class="chat-subtitle">Online</p>
+				</div>
+			</div>
+			<button class="chat-close-btn" (click)="fecharChat()">✕</button>
+		</div>
+
+		<div class="chat-messages">
+			<div *ngFor="let msg of mensagens"
+				 class="chat-message"
+				 [class.user]="msg.sender === 'user'"
+				 [class.bot]="msg.sender === 'bot'"
+				 [@messageAnim]>
+				<div class="message-bubble">
+					<p class="message-text">{{ msg.text }}</p>
+					<span class="message-time">{{ msg.timestamp | date:'HH:mm' }}</span>
+				</div>
+			</div>
+		</div>
+
+		<div class="chat-input-container">
+			<input
+				type="text"
+				class="chat-input"
+				[(ngModel)]="novaMensagem"
+				(keyup.enter)="enviarMensagem()"
+				placeholder="Digite sua mensagem..."
+			/>
+			<button class="chat-send-btn" (click)="enviarMensagem()" [disabled]="!novaMensagem.trim()">
+				<span>➤</span>
+			</button>
+		</div>
+	</div>
 </div>
