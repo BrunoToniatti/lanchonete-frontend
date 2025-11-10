@@ -190,13 +190,24 @@ export class Menu {
       });
 
       try {
-        // Chama a Netlify Function
+        // Monta o histórico completo da conversa (sem a mensagem "Digitando...")
+        const historicoParaIA = this.mensagens
+          .filter(msg => msg.text !== 'Digitando... ✍️')
+          .map(msg => ({
+            role: msg.sender === 'user' ? 'user' : 'assistant',
+            content: msg.text
+          }));
+
+        // Chama a Netlify Function com o histórico completo
         const response = await fetch('/.netlify/functions/chat', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
           },
-          body: JSON.stringify({ message: mensagemUsuario })
+          body: JSON.stringify({
+            message: mensagemUsuario,
+            historico: historicoParaIA
+          })
         });
 
         if (!response.ok) {

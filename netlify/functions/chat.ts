@@ -2,6 +2,7 @@ import { Handler, HandlerEvent, HandlerContext } from '@netlify/functions';
 
 interface RequestBody {
   message: string;
+  historico?: Array<{ role: string; content: string }>;
 }
 
 interface OpenAIMessage {
@@ -27,7 +28,7 @@ const handler: Handler = async (event: HandlerEvent, context: HandlerContext) =>
   }
 
   try {
-    const { message } = JSON.parse(event.body || '{}') as RequestBody;
+    const { message, historico = [] } = JSON.parse(event.body || '{}') as RequestBody;
 
     if (!message) {
       return {
@@ -120,6 +121,50 @@ const handler: Handler = async (event: HandlerEvent, context: HandlerContext) =>
 - **Sexta-feira:** Compre 2 lanches e ganhe 1 refrigerante
 `;
 
+    // Monta mensagens com histórico completo
+    const mensagensCompletas: OpenAIMessage[] = [
+      {
+        role: 'system',
+        content: `Você é um assistente virtual da "Lanchonete FSA", uma lanchonete universitária moderna e acolhedora.
+
+CARDÁPIO E INFORMAÇÕES:
+${cardapioCompleto}
+
+INSTRUÇÕES DE ATENDIMENTO:
+- Seja extremamente simpático, educado e prestativo
+- Use emojis para deixar a conversa mais leve e divertida, porém seja rápido na resposta, não escreva muito
+- Ajude com informações sobre: cardápio, preços, ingredientes, calorias, status de disponibilidade, horários e formas de pagamento
+- Sugira lanches baseado nas preferências do cliente (ex: mais leve, mais calórico, vegetariano, etc.)
+- Informe quando um item está esgotado e sugira alternativas
+- Mencione promoções quando relevante
+- Se perguntarem sobre reservas, explique que podem fazer pelo site
+- Seja conciso mas informativo
+- Se não souber algo que não está no cardápio, seja honesto e peça desculpas
+- Se o usuário for estudante, solicite a matricula ou o RA dele.
+- Quando o usuário informar o RA ou a matricula, responda com: "Obrigado, [Nome]! Você está qualificado para o desconto de estudante. Posso ajudar em mais alguma coisa?"
+- No final ofereça colocar o lanche para ser feito e reservado para retirada na lanchonete.
+- Se o usuário solicitar a reserva, como so tem front-end finja que o lanche já foi e gere um número aleatório para a reserva.
+- **IMPORTANTE: LEMBRE-SE e MANTENHA o contexto de toda a conversa anterior**
+
+PERSONALIDADE:
+- Jovem, descontraído mas profissional
+- Conhecedor do cardápio
+- Prestativo e atencioso
+- Use gírias leves quando apropriado (ex: "show", "top", "massa")
+- IMPORTANTE: Resposta rápiada para não juntar muito histórico
+
+# OBRIGATÓRIO:
+Antes de adicionar para reserva confirme se ele tem RA e o nome dele, sempre antes de adicionar o bonus você precisa solciitar RA e o Nome, sem RA e nome não consegue reservar com desconto de estudante
+
+Lembre-se: este é um projeto acadêmico da FSA, então demonstre orgulho da instituição!`
+      },
+      // Adiciona todo o histórico da conversa
+      ...historico.map(msg => ({
+        role: msg.role as 'user' | 'assistant',
+        content: msg.content
+      }))
+    ];
+
     // Chama API do OpenAI
     const response = await fetch('https://api.openai.com/v1/chat/completions', {
       method: 'POST',
@@ -129,38 +174,7 @@ const handler: Handler = async (event: HandlerEvent, context: HandlerContext) =>
       },
       body: JSON.stringify({
         model: 'gpt-3.5-turbo',
-        messages: [
-          {
-            role: 'system',
-            content: `Você é um assistente virtual da "Lanchonete FSA", uma lanchonete universitária moderna e acolhedora.
-
-CARDÁPIO E INFORMAÇÕES:
-${cardapioCompleto}
-
-INSTRUÇÕES DE ATENDIMENTO:
-- Seja extremamente simpático, educado e prestativo
-- Use emojis para deixar a conversa mais leve e divertida
-- Ajude com informações sobre: cardápio, preços, ingredientes, calorias, status de disponibilidade, horários e formas de pagamento
-- Sugira lanches baseado nas preferências do cliente (ex: mais leve, mais calórico, vegetariano, etc.)
-- Informe quando um item está esgotado e sugira alternativas
-- Mencione promoções quando relevante
-- Se perguntarem sobre reservas, explique que podem fazer pelo site
-- Seja conciso mas informativo
-- Se não souber algo que não está no cardápio, seja honesto e peça desculpas
-
-PERSONALIDADE:
-- Jovem, descontraído mas profissional
-- Conhecedor do cardápio
-- Prestativo e atencioso
-- Use gírias leves quando apropriado (ex: "show", "top", "massa")
-
-Lembre-se: este é um projeto acadêmico da FSA, então demonstre orgulho da instituição!`
-          },
-          {
-            role: 'user',
-            content: message
-          }
-        ] as OpenAIMessage[],
+        messages: mensagensCompletas,
         max_tokens: 300,
         temperature: 0.8
       })
